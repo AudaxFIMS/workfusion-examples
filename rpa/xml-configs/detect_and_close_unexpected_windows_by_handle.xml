@@ -24,15 +24,15 @@
                     widowHandlesNew = driver().getWindowHandles();
     
                     if(widowHandlesNew.size() != widowHandles.size()) {
-                    // get hanleds which we don't have in main list (it's mean what we opened this windows / popups later)
-                    handles =  widowHandlesNew.stream().filter{val -> !widowHandles.contains(val)}.collect(Collectors.toSet());
-    
-                    // loop additional handles and close
-                    handles.each { handle ->
-                        driver().switchTo().window(handle);
-                        sendKeys(Keys.chord(Keys.ALT, Keys.F4));
-                        println "Windows with: " + handle + " was closed!";
-                        }
+						// get hanleds which we don't have in main list (it's mean what we opened this windows / popups later)
+						handles =  widowHandlesNew.stream().filter{val -> !widowHandles.contains(val)}.collect(Collectors.toSet());
+		
+						// loop additional handles and close
+						handles.each { handle ->
+							driver().switchTo().window(handle);
+							sendKeys(Keys.chord(Keys.ALT, Keys.F4));
+							println "Windows with: " + handle + " was closed!";
+						}
                     }
     
                     // sleep for review test
