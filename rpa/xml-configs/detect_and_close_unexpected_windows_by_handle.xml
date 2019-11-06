@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://web-harvest.sourceforge.net/schema/1.0/config" scriptlang="groovy">
+    <robotics-flow>
+        <robot driver="desktop" close-on-completion="true">
+            <capability name="SEARCH_ALL_WINDOWS" value="true"/>
+            <script>
+                <![CDATA[
+                    import org.openqa.selenium.NoSuchElementException;
+                    import org.openqa.selenium.ElementNotVisibleException;
+                    import java.util.concurrent.TimeUnit;
+                    import java.util.stream.Collectors;
+                    import org.openqa.selenium.Keys;
+                    
+                    driver().manage().timeouts().implicitlyWait(1, TimeUnit.MINUTES).pageLoadTimeout(1, TimeUnit.MINUTES);
+                    
+                    // get main handles list
+                    widowHandles = driver().getWindowHandles();
+                    
+                    // open 2 additional applications
+                    openAndFocus('notepad.exe', 3000, 250)
+                    openAndFocus("C://Program Files//Notepad++//notepad++.exe", 3000, 250)
+                    
+                    // get new handles list
+                    widowHandlesNew = driver().getWindowHandles();
+
+					if(widowHandlesNew.size() != widowHandles.size()) {
+						// get hanleds which we don't have in main list (it's mean what we opened this windows / popups later)
+						handles =  widowHandlesNew.stream().filter{val -> !widowHandles.contains(val)}.collect(Collectors.toSet());
+						
+						// loop additional handles and close
+						handles.each { handle ->
+							driver().switchTo().window(handle);
+							sendKeys(Keys.chord(Keys.ALT, Keys.F4));    
+							println "Windows with: " + handle + " was closed!";
+						}
+					}
+                    
+                    // sleep for review test
+                    TimeUnit.SECONDS.sleep(10);
+                ]]>
+            </script>
+        </robot>
+    </robotics-flow>
+
+    <export include-original-data="true">
+    </export>
+</config>

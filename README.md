@@ -1,0 +1,1 @@
+Project with some examples for Workfusion platform
